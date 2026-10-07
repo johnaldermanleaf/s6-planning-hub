@@ -24,6 +24,7 @@
   --olive-bg:#EDF0D9;--olive-text:#4A5210;
   --success-bg:#EAF3DE;--success-text:#27500A;
   --danger-text:#791F1F;--danger-border:rgba(163,45,45,0.3);
+  --due-over-bg:#FDEDEC;--due-soon-bg:#FDF1E0;
   --font:'Inter',system-ui,-apple-system,sans-serif;
 }
 @media(prefers-color-scheme:dark){
@@ -31,6 +32,7 @@
     --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;
     --text:#f0ede8;--text2:#a8a49e;--text3:#6a6762;
     --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);
+    --due-over-bg:rgba(200,60,60,0.16);--due-soon-bg:rgba(220,140,40,0.16);
   }
 }
 body{font-family:var(--font);background:var(--bg3);color:var(--text);min-height:100vh}
@@ -83,6 +85,11 @@ body{font-family:var(--font);background:var(--bg3);color:var(--text);min-height:
 .tbl tr:hover td{background:var(--bg2)}
 .tbl tr.exp-row td{background:var(--bg2)}
 .tbl tr.archived-row td{opacity:.55}
+/* Due-date tinting (Active tab only): past target = light red, due within 7 days = light orange */
+.tbl tr.due-over td,.tbl tr.due-over:hover td,.tbl tr.due-over.exp-row td{background:var(--due-over-bg)}
+.tbl tr.due-soon td,.tbl tr.due-soon:hover td,.tbl tr.due-soon.exp-row td{background:var(--due-soon-bg)}
+.tbl tr.due-over:hover td{filter:brightness(.97)}
+.tbl tr.due-soon:hover td{filter:brightness(.97)}
 .init-name{font-weight:500;display:flex;align-items:flex-start;gap:5px;font-size:13px}
 .chevron{color:var(--text3);font-size:11px;margin-top:2px;flex-shrink:0;transition:transform .15s;cursor:pointer;padding:1px 3px;margin-left:-3px;border-radius:4px}
 .chevron:hover{color:var(--text);background:var(--border)}
@@ -674,6 +681,17 @@ function cell(item,field,display,extraClass){
   return `<td class="cell-edit${extraClass?' '+extraClass:''}" onmousedown="startInline('${id}','${field}',event)" title="Click to edit"><span class="cv">${display}</span></td>`;
 }
 function dateDisplay(v){ return v?`<span class="done-date">${formatDate(v)}</span>`:`<span class="done-date date-empty">—</span>`; }
+// Due-date status for Active rows: 'due-over' if the target date is before today,
+// 'due-soon' if it's today or within the next 7 days, '' otherwise (or no/invalid date).
+const DUE_SOON_DAYS = 7;
+function dueClass(item){
+  const t=new Date(item.targetDate||''); if(isNaN(t.getTime())) return '';
+  const today=new Date(); today.setHours(0,0,0,0); t.setHours(0,0,0,0);
+  const days=Math.round((t-today)/86400000);
+  if(days<0) return 'due-over';
+  if(days<=DUE_SOON_DAYS) return 'due-soon';
+  return '';
+}
 function rankDisplay(v){ return v!==''&&v!=null?`<span class="rank-val">${escHtml(v)}</span>`:`<span class="date-empty">—</span>`; }
 
 // ── UPDATE COLUMN (latest notes) ─────────────
@@ -962,7 +980,8 @@ function render(){
     items.forEach(item=>{
       const id=item._id, isExp=expanded.has(id), isEd=editingKey===id, rowOpen=isExp||isEd;
       const isNewRow = id===newRowId;
-      html+=`<tr class="${rowOpen?'exp-row':''}${isRemoved?' archived-row':''}"${isNewRow?' data-newrow="1"':''} onclick="if(!event.target.closest('select,input,textarea,button,.cell-edit'))toggleRow('${id}')">`;
+      const due = (currentTab==='active' && !isNewRow) ? dueClass(item) : '';
+      html+=`<tr class="${rowOpen?'exp-row':''}${isRemoved?' archived-row':''}${due?' '+due:''}"${isNewRow?' data-newrow="1"':''}${due?` title="${due==='due-over'?'Past target date':'Due within a week'}"`:''} onclick="if(!event.target.closest('select,input,textarea,button,.cell-edit'))toggleRow('${id}')">`;
       // Initiative name: chevron opens the details; the name itself edits in place.
       const chev=`<i class="ti ti-chevron-right chevron${rowOpen?' open':''}" title="${rowOpen?'Hide details':'Show details'}" onclick="toggleRow('${id}',event)"></i>`;
       if(isInline(id,'name')) html+=`<td class="cell-edit"><div class="init-name">${chev}${inlineEditor(id,'name',item.name||'')}</div></td>`;

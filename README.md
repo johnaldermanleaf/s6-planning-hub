@@ -60,6 +60,9 @@ What changed:
   line). The chevron (›) opens the details drawer, which has "Edit all fields" for
   description, lead, people, etc.
 - **Drag-to-reorder removed.** Order comes purely from the Priority number.
+- **Due-date tinting (Active tab).** A row whose Target date has passed gets a light red
+  background; one due today or within the next 7 days gets light orange. Hover the row
+  for the reason. Rows with no target date, and the Done/Backlog/Removed tabs, are untouched.
 - Background sync pauses while a cell editor is open so your typing isn't interrupted;
   concurrent edits still merge row-by-row exactly as in v2.
 
