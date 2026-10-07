@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Society6 — Planning Hub</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f4;--bg3:#efefed;
+  --text:#1a1a1a;--text2:#5a5a5a;--text3:#9a9a9a;
+  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
+  --radius:8px;--radius-lg:12px;
+  --green-bg:#EAF3DE;--green-text:#27500A;
+  --amber-bg:#FAEEDA;--amber-text:#633806;
+  --gray-bg:#F1EFE8;--gray-text:#5F5E5A;
+  --teal-bg:#E1F5EE;--teal-text:#085041;
+  --blue-bg:#E6F1FB;--blue-text:#0C447C;
+  --red-bg:#FCEBEB;--red-text:#791F1F;
+  --purple-bg:#EEEDFE;--purple-text:#3C3489;
+  --coral-bg:#FAECE7;--coral-text:#712B13;
+  --pink-bg:#FBEAF0;--pink-text:#72243E;
+  --olive-bg:#EDF0D9;--olive-text:#4A5210;
+  --success-bg:#EAF3DE;--success-text:#27500A;
+  --danger-text:#791F1F;--danger-border:rgba(163,45,45,0.3);
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;
+    --text:#f0ede8;--text2:#a8a49e;--text3:#6a6762;
+    --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.18);
+  }
+}
+body{font-family:var(--font);background:var(--bg3);color:var(--text);min-height:100vh}
+.page{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+.mission-bar{background:var(--bg2);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.25rem;border:0.5px solid var(--border)}
+.mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.mission-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:3px}
+.mission-text{font-size:14px;color:var(--text);font-weight:500}
+.vp-text{font-size:13px;color:var(--text2);line-height:1.5}
+.section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px}
+.obj-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+.obj-card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:.875rem 1rem}
+.obj-title{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:10px;flex-wrap:wrap}
+.tab-row{display:flex}
+.tab{font-size:13px;padding:7px 14px;cursor:pointer;color:var(--text2);border:0.5px solid var(--border);background:var(--bg);white-space:nowrap}
+.tab:first-child{border-radius:var(--radius) 0 0 var(--radius);border-right:none}
+.tab:not(:first-child):not(:last-child){border-right:none}
+.tab:last-child{border-radius:0 var(--radius) var(--radius) 0}
+.tab.active{background:var(--bg2);color:var(--text);font-weight:500}
+.cnt{display:inline-flex;align-items:center;justify-content:center;background:var(--bg3);color:var(--text3);border-radius:10px;font-size:11px;padding:1px 6px;margin-left:5px}
+.tab.active .cnt{background:var(--border)}
+.right-toolbar{display:flex;align-items:center;gap:8px}
+.sync-status{font-size:11px;color:var(--text3);min-width:80px;text-align:right}
+.sync-status.syncing{color:var(--text2)}
+.sync-status.error{color:var(--danger-text)}
+.search-input{font-size:13px;padding:5px 10px;height:30px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--bg);color:var(--text);width:180px}
+.search-input:focus{outline:none;border-color:var(--border2)}
+.shown-count{font-size:12px;color:var(--text3);white-space:nowrap}
+.add-btn{font-size:12px;padding:5px 12px;background:none;color:var(--text2);border:0.5px solid var(--border2);border-radius:var(--radius);cursor:pointer;display:flex;align-items:center;gap:4px}
+.add-btn:hover{background:var(--bg2)}
+.filter-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.filter-pill{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border);background:var(--bg);font-size:12px;color:var(--text2);cursor:pointer;white-space:nowrap;user-select:none;position:relative}
+.filter-pill.active-filter{background:var(--bg2);border-color:var(--border2);color:var(--text);font-weight:500}
+.filter-hint{font-size:11px;color:var(--text3);margin-left:auto;white-space:nowrap}
+.dropdown-menu{position:absolute;top:calc(100% + 4px);left:0;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);z-index:100;min-width:160px;padding:4px 0;box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+.dropdown-item{padding:6px 12px;font-size:13px;cursor:pointer;color:var(--text);white-space:nowrap}
+.dropdown-item:hover{background:var(--bg2)}
+.dropdown-item.selected{font-weight:500}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;table-layout:fixed;background:var(--bg);border-radius:var(--radius-lg);border:0.5px solid var(--border)}
+.tbl th{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:8px 10px;text-align:left;border-bottom:0.5px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;background:var(--bg);position:sticky;top:0;z-index:10;box-shadow:0 1px 0 var(--border)}
+.tbl th:hover{color:var(--text2)}
+.tbl th.sorted{color:var(--text)}
+.tbl th.no-sort{cursor:default}
+.tbl th.no-sort:hover{color:var(--text3)}
+.sort-arrow{font-size:10px;margin-left:3px;opacity:.5}
+.tbl th.sorted .sort-arrow{opacity:1}
+.tbl td{padding:9px 10px;border-bottom:0.5px solid var(--border);vertical-align:top;color:var(--text)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--bg2)}
+.tbl tr.exp-row td{background:var(--bg2)}
+.tbl tr.archived-row td{opacity:.55}
+.init-name{font-weight:500;display:flex;align-items:flex-start;gap:5px;font-size:13px}
+.chevron{color:var(--text3);font-size:11px;margin-top:2px;flex-shrink:0;transition:transform .15s;cursor:pointer;padding:1px 3px;margin-left:-3px;border-radius:4px}
+.chevron:hover{color:var(--text);background:var(--border)}
+.chevron.open{transform:rotate(90deg)}
+/* Inline editing: every value in the table is a .cv (click to edit). */
+.cv{display:inline-block;cursor:text;border-radius:4px;padding:1px 4px;margin:-1px -4px;max-width:100%;min-width:14px;min-height:16px}
+.cell-edit:hover .cv{box-shadow:inset 0 0 0 1px var(--border2);background:var(--bg)}
+.cv .badge,.cv .oc{cursor:pointer}
+.inline-wrap{position:relative}
+.inline-wrap .edit-field{padding:3px 6px;font-size:13px}
+.inline-wrap textarea.edit-field{min-height:72px}
+.inline-hint{font-size:10px;color:var(--text3);margin-top:3px;white-space:nowrap}
+.rank-val{font-variant-numeric:tabular-nums;font-weight:500}
+.detail-row td{padding:0}
+.detail-box{padding:12px 12px 14px 26px;background:var(--bg2);border-bottom:0.5px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.detail-full{grid-column:1/-1}
+.dlabel{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.dtext{font-size:13px;color:var(--text2);line-height:1.5}
+.edit-field{font-size:13px;padding:5px 8px;border-radius:var(--radius);width:100%;color:var(--text);background:var(--bg);border:0.5px solid var(--border2);line-height:1.4;font-family:var(--font)}
+.edit-field:focus{outline:none;border-color:var(--text3)}
+textarea.edit-field{resize:vertical;min-height:60px}
+select.edit-field{cursor:pointer}
+.save-bar{margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn-save{font-size:12px;padding:5px 14px;background:var(--success-bg);color:var(--success-text);border:none;border-radius:var(--radius);cursor:pointer;font-weight:500}
+.btn-save:hover{opacity:.85}
+.btn-edit{font-size:12px;padding:4px 10px;background:none;color:var(--text2);border:0.5px solid var(--border2);border-radius:var(--radius);cursor:pointer}
+.btn-edit:hover{background:var(--bg)}
+.btn-cancel{font-size:12px;padding:5px 14px;background:none;color:var(--text2);border:0.5px solid var(--border);border-radius:var(--radius);cursor:pointer}
+.btn-remove{font-size:12px;padding:5px 14px;background:none;color:var(--danger-text);border:0.5px solid var(--danger-border);border-radius:var(--radius);cursor:pointer;margin-left:auto}
+.btn-restore{font-size:12px;padding:4px 10px;background:none;color:var(--text2);border:0.5px solid var(--border2);border-radius:var(--radius);cursor:pointer}
+.move-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.move-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-right:2px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;white-space:nowrap}
+.b-high{background:var(--green-bg);color:var(--green-text)}
+.b-med{background:var(--amber-bg);color:var(--amber-text)}
+.b-back{background:var(--gray-bg);color:var(--gray-text)}
+.oc{display:inline-flex;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:500}
+.oc-cvr{background:var(--purple-bg);color:var(--purple-text)}
+.oc-traffic{background:var(--blue-bg);color:var(--blue-text)}
+.oc-trade{background:var(--teal-bg);color:var(--teal-text)}
+.oc-return{background:var(--amber-bg);color:var(--amber-text)}
+.oc-ops{background:var(--gray-bg);color:var(--gray-text)}
+.oc-other{background:var(--coral-bg);color:var(--coral-text)}
+.oc-channels{background:var(--pink-bg);color:var(--pink-text)}
+.oc-b2b{background:var(--teal-bg);color:var(--teal-text)}
+.oc-wallart{background:var(--purple-bg);color:var(--purple-text)}
+.empty{padding:2rem;text-align:center;color:var(--text3);font-size:13px}
+.done-date{font-size:12px;color:var(--text2);white-space:nowrap}
+.date-empty{color:var(--text3)}
+.loading{padding:3rem;text-align:center;color:var(--text3);font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px}
+
+/* Update column: short snippet in the row, full text in a popover on hover; click edits in place */
+.upd-cell{position:relative}
+.upd-snip{display:block;font-size:12px;color:var(--text2);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:text}
+.upd-snip:hover{color:var(--text)}
+.upd-none{font-size:10px;font-weight:500;letter-spacing:.06em;color:var(--text3);text-transform:uppercase;cursor:text}
+.upd-pop{display:none;position:absolute;right:8px;top:calc(100% - 4px);width:360px;max-width:80vw;max-height:320px;overflow-y:auto;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);box-shadow:0 8px 24px rgba(0,0,0,0.16);padding:12px 14px;font-size:13px;line-height:1.55;color:var(--text);white-space:pre-wrap;z-index:60;cursor:auto;text-align:left;pointer-events:none}
+.upd-cell:hover .upd-pop{display:block}
+.upd-pop .upd-pop-label{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+
+.site-header{background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 1.5rem;position:sticky;top:0;z-index:50}
+.site-header-inner{max-width:1100px;margin:0 auto;height:48px;display:flex;align-items:center;justify-content:space-between}
+.site-brand{display:flex;align-items:center;gap:8px}
+.site-name{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.site-title{font-size:13px;color:var(--text3);font-weight:400}
+
+.sticky-bar{position:sticky;top:48px;z-index:40;background:var(--bg3);padding:10px 0 0;margin-bottom:0}
+/* Roadmap calendar */
+.cal-legend-note{font-size:11px;color:var(--text3);margin-right:8px}
+.cal-legend{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);margin-right:10px}
+.cal-swatch{width:10px;height:10px;border-radius:2px;display:inline-block}
+.cal-empty{padding:48px 20px;text-align:center;color:var(--text3);font-size:13px;line-height:1.8}
+.cal-scroll{overflow:auto;max-height:72vh;border:0.5px solid var(--border);border-radius:var(--radius-lg);background:var(--bg)}
+.cal-inner{position:relative;min-width:100%}
+.cal-headrow{display:flex;position:sticky;top:0;z-index:6;background:var(--bg)}
+.cal-months{border-bottom:0.5px solid var(--border)}
+.cal-month{flex:none;font-size:11px;font-weight:600;color:var(--text2);padding:6px;border-right:0.5px solid var(--border);box-sizing:border-box;text-transform:uppercase;letter-spacing:.04em}
+.cal-weeks{top:29px;border-bottom:0.5px solid var(--border)}
+.cal-week{flex:none;font-size:10px;color:var(--text3);padding:3px 0;text-align:center;border-right:0.5px solid var(--border);box-sizing:border-box}
+.cal-group{background:var(--bg2);padding:5px 0;border-bottom:0.5px solid var(--border)}
+.cal-group-label{position:sticky;left:8px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text2)}
+.cal-row{position:relative;height:30px;border-bottom:0.5px solid var(--border)}
+.gbar{position:absolute;top:4px;height:22px;border-radius:5px;border:1.5px solid;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;box-sizing:border-box}
+.gbar:hover{box-shadow:0 1px 5px rgba(0,0,0,0.16);z-index:4}
+.cal-today{position:absolute;top:0;bottom:0;width:2px;background:rgba(200,40,40,0.55);z-index:3}
+.cal-modal{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.cal-modal-box{background:var(--bg);border-radius:var(--radius-lg);max-width:680px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,0.25)}
+.cal-modal-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:0.5px solid var(--border)}
+.cal-modal-title{font-size:15px;font-weight:600;color:var(--text);flex:1}
+.cal-x{background:none;border:none;font-size:15px;color:var(--text3);cursor:pointer;padding:2px 6px}
+.cal-modal-foot{padding:12px 16px;display:flex;gap:8px;justify-content:flex-end;border-top:0.5px solid var(--border)}
+
+.combo{position:relative}
+.combo-input{width:100%}
+.combo-menu{position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--bg);border:0.5px solid var(--border2);border-radius:var(--radius);max-height:200px;overflow-y:auto;box-shadow:0 4px 14px rgba(0,0,0,0.14);display:none;margin-top:2px}
+.combo-item{padding:6px 10px;font-size:13px;cursor:pointer;color:var(--text);white-space:nowrap}
+.combo-item:hover{background:var(--bg2)}
+</style>
+</head>
+<body>
+<div id="login-overlay" style="display:none;position:fixed;inset:0;z-index:1000;background:var(--bg3);align-items:center;justify-content:center;flex-direction:column;font-family:var(--font)">
+  <div style="background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:28px 26px;width:300px;max-width:90vw;text-align:center">
+    <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">Society6 Planning Hub</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:16px">Enter the team password</div>
+    <input id="login-pass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()" style="width:100%;font-size:14px;padding:9px 11px;border:0.5px solid var(--border2);border-radius:var(--radius);background:var(--bg);color:var(--text);margin-bottom:10px">
+    <div id="login-err" style="display:none;font-size:12px;color:var(--danger-text);margin-bottom:10px">Incorrect password</div>
+    <button onclick="doLogin()" style="width:100%;font-size:13px;font-weight:500;padding:9px;border:none;border-radius:var(--radius);background:var(--success-bg);color:var(--success-text);cursor:pointer">Enter</button>
+  </div>
+</div>
+<div class="site-header">
+  <div class="site-header-inner">
+    <div class="site-brand">
+      <svg width="22" height="22" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Society6 logo">
+        <circle cx="20" cy="20" r="20" fill="#1a1a1a"/>
+        <text x="20" y="26" font-size="16" font-weight="700" fill="white" text-anchor="middle" font-family="Georgia,serif">S6</text>
+      </svg>
+      <span class="site-name">Society6</span>
+    </div>
+    <span class="site-title">Planning Hub</span>
+  </div>
+</div>
+<div class="page" onclick="closeDropdowns(event)">
+<div id="save-banner" style="display:none;background:var(--red-bg);color:var(--red-text);font-size:12px;padding:8px 12px;border-radius:var(--radius);margin-bottom:12px;align-items:center;gap:10px">
+  <span>&#9888; You have changes that aren&#39;t saved to the server yet.</span>
+  <button onclick="pushSave()" style="font-size:12px;padding:3px 10px;border:0.5px solid var(--danger-border);border-radius:6px;background:transparent;color:var(--red-text);cursor:pointer">Retry save</button>
+</div>
+
+
+<!-- MISSION -->
+<div class="mission-bar">
+  <div class="mission-grid">
+    <div><div class="mission-label">Mission</div><div class="mission-text">Bring art into everyday spaces so they feel genuinely, unmistakably yours.</div></div>
+    <div><div class="mission-label">Value proposition</div><div class="vp-text">Your home is the primary canvas for personal identity. Art is how you sign it. Society6 is where you find art from artists and creators, so your home doesn't just look good — it feels like you.</div></div>
+  </div>
+</div>
+
+<!-- OBJECTIVES -->
+<div class="section-label">Core Pillars</div>
+<div class="obj-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+  <div class="obj-card">
+    <div class="obj-title"><i class="ti ti-photo" style="font-size:12px"></i>Wall Art</div>
+    <div style="font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-top:2px">Build Best in Class Wall Art Category</div>
+  </div>
+  <div class="obj-card">
+    <div class="obj-title"><i class="ti ti-building-store" style="font-size:12px"></i>B2B</div>
+    <div style="font-size:14px;font-weight:500;color:var(--text);line-height:1.4;margin-top:2px">Grow B2B from 25% to 37% of Total Business</div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="sticky-bar"><div class="toolbar">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <div class="tab-row">
+      <button class="tab active" id="tab-active" onclick="setTab('active',this)">Active <span class="cnt" id="cnt-active">—</span></button>
+      <button class="tab" id="tab-done" onclick="setTab('done',this)">Done <span class="cnt" id="cnt-done">—</span></button>
+      <button class="tab" id="tab-backlog" onclick="setTab('backlog',this)">Backlog <span class="cnt" id="cnt-backlog">—</span></button>
+      <button class="tab" id="tab-removed" onclick="setTab('removed',this)">Removed <span class="cnt" id="cnt-removed">—</span></button>
+      <button class="tab" id="tab-calendar" onclick="openCalendar(this)"><i class="ti ti-calendar-event" style="font-size:13px;margin-right:3px"></i>Calendar</button>
+    </div>
+    <button class="add-btn" onclick="addNew()"><i class="ti ti-plus" style="font-size:13px"></i>Add initiative</button>
+    <button class="add-btn" onclick="downloadBackup()" title="Download a backup file"><i class="ti ti-download" style="font-size:13px"></i>Backup</button>
+    <button class="add-btn" onclick="document.getElementById('importFile').click()" title="Restore from a backup file"><i class="ti ti-upload" style="font-size:13px"></i>Import</button>
+    <input type="file" id="importFile" accept="application/json,.json" style="display:none" onchange="importBackup(event)">
+  </div>
+  <div class="right-toolbar">
+    <span class="sync-status" id="sync-status">Loading…</span>
+    <input class="search-input" type="text" id="search" placeholder="Search..." oninput="render()">
+    <span class="shown-count" id="result-count"></span>
+  </div>
+</div>
+
+<div class="filter-bar" id="filter-bar"></div>
+</div><!-- /sticky-bar -->
+<div id="table-container"><div class="loading"><i class="ti ti-loader" style="font-size:16px"></i> Loading…</div></div>
+<div id="modal-root"></div>
+
+  <!-- FOOTER -->
+  <footer style="margin-top:20px;padding-top:14px;border-top:0.5px solid var(--border);font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+    <i class="ti ti-cloud" style="font-size:12px"></i>
+    <span>Shared data saved on your server.</span>
+    <a href="#" onclick="downloadBackup();return false" style="color:var(--text2)">Download a backup</a>
+  </footer>
+</div>
+
+<script>
+let APP_PASSWORD = '';   // shared team password (entered at login, kept in memory this session)
+
+const TODAY = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+function formatDate(val) {
+  if (!val || val === '—' || val === '') return '—';
+  const d = new Date(val);
+  if (isNaN(d.getTime())) return val;
+  return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+}
+
+const OBJ_CLS = {"B2B":"oc-b2b","Wall Art":"oc-wallart","Conversion Rate":"oc-cvr","Traffic":"oc-traffic","Trade Revenue":"oc-trade","Return Rate":"oc-return","Operating Efficiency":"oc-ops","New Channels":"oc-channels","Retention":"oc-other","Other":"oc-other"};
+const OBJ_SHORT = {"B2B":"B2B","Wall Art":"Wall Art","Conversion Rate":"CVR","Traffic":"Traffic","Trade Revenue":"Trade","Return Rate":"Return","Operating Efficiency":"Ops","New Channels":"Channels","Retention":"Retention","Other":"Other"};
+const OBJECTIVES = ["B2B","Wall Art","Conversion Rate","Traffic","Trade Revenue","Return Rate","Operating Efficiency","New Channels","Retention","Other"];
+const OWNERS = ["Holly","Jodi","John","Julie","Lisa","Rie","Ruk","Sara"];
+const LEADS = ["Alice","Amy","Anamaria","Annslie","Ashish","Cala","Cedric","Chad","Cheyenne","Chue","Daniel","Domenica","Emily","Esteban","Evann","Fidel","Hera","Holly","Ina","Jason","Jaydeep","Jennifer","Jodi","John","Jordan","Josue","Julie","Kasey","Kyla","Lady","Lalena","Lisa","Mandy","Maria","Matthew","Megan","Mikaela","Myka","Nate","Nora","Oscar","Palina","Pallavi","Paola","Pranit","Rebecca","Rie","Rob","Rukudzo","Sad'e","Sandra","Sara","Saurabh","Savannah","Shubham","Stephanie","Steve","Varvara","Zoya"];
+function leadCombo(val){
+  const v=(val||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+  const items=LEADS.map(n=>`<div class="combo-item" data-v="${n}" onmousedown="comboPick(this)">${n}</div>`).join('');
+  return `<div class="combo"><input class="edit-field combo-input" value="${v}" placeholder="Type to search…" autocomplete="off" oninput="comboFilter(this)" onfocus="comboOpen(this)" onblur="comboBlur(this)"><div class="combo-menu">${items}</div></div>`;
+}
+function comboOpen(inp){ const m=inp.parentElement.querySelector('.combo-menu'); if(m){ m.style.display='block'; comboFilter(inp); } }
+function comboFilter(inp){ const q=inp.value.toLowerCase(); const m=inp.parentElement.querySelector('.combo-menu'); if(!m) return; m.style.display='block'; m.querySelectorAll('.combo-item').forEach(it=>{ it.style.display=it.dataset.v.toLowerCase().includes(q)?'':'none'; }); updateDraft('lead',inp.value); }
+function comboPick(el){ const combo=el.closest('.combo'); const inp=combo.querySelector('.combo-input'); inp.value=el.dataset.v; updateDraft('lead',el.dataset.v); combo.querySelector('.combo-menu').style.display='none'; }
+function comboBlur(inp){ setTimeout(()=>{ const m=inp.parentElement.querySelector('.combo-menu'); if(m) m.style.display='none'; },180); }
+
+const FUNC_AREAS = ["Sales","Eng/Ops","Mrktg/Merch","Manuf/Finance"];
+const LISTS = ['active','done','backlog','removed'];
+const LIST_LABEL = {active:'Active',done:'Done',backlog:'Backlog',removed:'Removed'};
+
+let ACTIVE=[], DONE=[], BACKLOG=[], REMOVED=[];
+let currentTab='active', currentView='list', expanded=new Set(), editingKey=null, editDraft={}, editBase=null;
+let colFilters={obj:'',owner:'',functionalArea:''}, sortCol='rank', sortDir=1, openDropdown=null;
+let saveTimer=null, dataLoaded=false;
+function emptyFilters(){ return {obj:'',owner:'',functionalArea:''}; }
+// Each tab's natural order: active/backlog by priority number (stored as `rank`), done/removed newest first.
+function defaultSort(tab){
+  if(tab==='done') return ['doneDate',-1];
+  if(tab==='removed') return ['removedDate',-1];
+  return ['rank',1];
+}
+
+// ── ROW IDENTITY ─────────────────────────────
+// Every initiative carries a permanent _id that is SAVED to the server, so every
+// browser agrees on which row is which. That is what lets two people's edits be
+// merged row-by-row instead of one whole plan overwriting the other.
+// newRowId tracks the brand-new, not-yet-saved row so it can sort to the top and is
+// discarded (not persisted) if the user cancels instead of saving.
+let newRowId = null;
+function nextId(){
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return 'row_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,10);
+}
+function ensureIds(arr){ (arr||[]).forEach(r=>{ if(!r._id) r._id = nextId(); }); return arr||[]; }
+function findById(arr,id){ return (arr||[]).findIndex(r=>r._id===id); }
+function listArr(l){ return l==='active'?ACTIVE:l==='done'?DONE:l==='backlog'?BACKLOG:REMOVED; }
+// Find a row in any list: returns {arr, list, idx} or null.
+function locateRow(id){
+  for(const l of LISTS){ const arr=listArr(l); const i=findById(arr,id); if(i>-1) return {arr,list:l,idx:i}; }
+  return null;
+}
+function setLists(d){
+  ACTIVE=ensureIds(d.active||[]); DONE=ensureIds(d.done||[]); BACKLOG=ensureIds(d.backlog||[]); REMOVED=ensureIds(d.removed||[]);
+}
+function clone(x){ return JSON.parse(JSON.stringify(x)); }
+
+// ── THREE-WAY MERGE ──────────────────────────
+// base   = the plan as this browser last loaded/saved it
+// mine   = the plan as this browser has it now
+// theirs = the plan currently on the server (someone else saved)
+// Result: theirs, with every row *I* changed laid on top. A row both sides changed
+// differently is reported in `collisions` so the user can be asked about that row only.
+// (Kept dependency-free and pure so it can be unit-tested outside the browser.)
+/* MERGE-START */
+function rowsEqual(a,b){
+  if(!a&&!b) return true; if(!a||!b) return false;
+  const ka=Object.keys(a).filter(k=>k!=='_id'&&a[k]!==''&&a[k]!=null).sort();
+  const kb=Object.keys(b).filter(k=>k!=='_id'&&b[k]!==''&&b[k]!=null).sort();
+  if(ka.length!==kb.length) return false;
+  for(let i=0;i<ka.length;i++){ if(ka[i]!==kb[i]) return false; if(String(a[ka[i]])!==String(b[ka[i]])) return false; }
+  return true;
+}
+function indexPlan(plan){
+  const m=new Map();
+  for(const l of LISTS){ (plan[l]||[]).forEach((r,i)=>{ if(r&&r._id) m.set(r._id,{list:l,row:r,idx:i}); }); }
+  return m;
+}
+function sameState(a,b){   // same list + same content (or both absent)
+  if(!a&&!b) return true; if(!a||!b) return false;
+  return a.list===b.list && rowsEqual(a.row,b.row);
+}
+function orderOf(plan,list){ return (plan[list]||[]).map(r=>r._id); }
+function commonSeq(seq,set){ return seq.filter(id=>set.has(id)); }
+function sameOrder(a,b){ if(a.length!==b.length) return false; for(let i=0;i<a.length;i++) if(a[i]!==b[i]) return false; return true; }
+// Weave: start from `skeleton` order, then slot in ids from `other` that belong in the
+// final list but aren't in the skeleton, placing each after its nearest predecessor.
+function weave(skeleton,other,finalSet){
+  const out=skeleton.filter(id=>finalSet.has(id));
+  const present=new Set(out);
+  other.forEach((id,i)=>{
+    if(!finalSet.has(id)||present.has(id)) return;
+    let at=0;
+    for(let j=i-1;j>=0;j--){ const p=out.indexOf(other[j]); if(p>-1){ at=p+1; break; } }
+    out.splice(at,0,id); present.add(id);
+  });
+  return out;
+}
+function mergePlans(base,mine,theirs){
+  const B=indexPlan(base), M=indexPlan(mine), T=indexPlan(theirs);
+  const ids=new Set([...B.keys(),...M.keys(),...T.keys()]);
+  const decided=new Map();   // id -> {list,row} or null (absent)
+  const collisions=[];
+  for(const id of ids){
+    const b=B.get(id)||null, m=M.get(id)||null, t=T.get(id)||null;
+    const mineChanged=!sameState(b,m), theirsChanged=!sameState(b,t);
+    let pick;
+    if(!mineChanged) pick=t;
+    else if(!theirsChanged) pick=m;
+    else if(sameState(m,t)) pick=t;
+    else { pick=t; collisions.push({id, mine:m, theirs:t}); }   // default: theirs, user may flip
+    decided.set(id, pick?{list:pick.list,row:clone(pick.row)}:null);
+  }
+  const merged={};
+  for(const l of LISTS){
+    const finalSet=new Set([...decided].filter(([id,v])=>v&&v.list===l).map(([id])=>id));
+    const bo=orderOf(base,l), mo=orderOf(mine,l), to=orderOf(theirs,l);
+    const mineReordered=!sameOrder(commonSeq(mo,new Set(bo)),commonSeq(bo,new Set(mo)));
+    const theirsReordered=!sameOrder(commonSeq(to,new Set(bo)),commonSeq(bo,new Set(to)));
+    const order=(mineReordered&&!theirsReordered)?weave(mo,to,finalSet):weave(to,mo,finalSet);
+    merged[l]=order.map(id=>{ const r=decided.get(id).row; r._id=id; return r; });
+  }
+  return {merged, collisions};
+}
+function applyCollisionChoice(merged,c,keepMine){
+  // Replace the row `c.id` in `merged` with the chosen side (or drop it if that side removed it).
+  for(const l of LISTS){ const i=(merged[l]||[]).findIndex(r=>r._id===c.id); if(i>-1) merged[l].splice(i,1); }
+  const side=keepMine?c.mine:c.theirs;
+  if(side){ const r=clone(side.row); r._id=c.id; (merged[side.list]=merged[side.list]||[]).unshift(r); }
+  return merged;
+}
+function describeRow(s){
+  if(!s) return 'removed it entirely';
+  const r=s.row;
+  return `${r.name||'(unnamed)'} · priority ${r.rank||'—'} · ${s.list}`;
+}
+function diffFields(a,b){
+  if(!a||!b) return '';
+  const keys=new Set([...Object.keys(a.row),...Object.keys(b.row)]);
+  const out=[];
+  for(const k of keys){ if(k==='_id') continue; const x=a.row[k]??'', y=b.row[k]??''; if(String(x)!==String(y)) out.push(`  ${k}: "${String(x).slice(0,60)}"  →  "${String(y).slice(0,60)}"`); }
+  return out.join('\n');
+}
+/* MERGE-END */
+
+// ── SERVER SYNC (Replit backend) ─────────────
+let baseRev = 0;          // version this client last loaded/saved
+let baseSnapshot = null;  // the plan exactly as loaded/saved at baseRev (for merging)
+let dirty = false;        // true = local changes not yet confirmed on the server
+let saveInFlight = false;
+let retryTimer = null;
+let pollTimer = null;
+let forceReplace = false; // set by Import: replace the server copy outright
+let mergeAttempts = 0;
+
+function currentPayload(){ return {active:clone(ACTIVE),done:clone(DONE),backlog:clone(BACKLOG),removed:clone(REMOVED)}; }
+
+async function apiGet(){
+  const res = await fetch('/api/data', { headers:{'x-app-password':APP_PASSWORD} });
+  if (res.status === 401) throw {auth:true};
+  return res.json();
+}
+
+function adoptServerData(j){
+  setLists(j.data);
+  baseRev=j.rev||0; baseSnapshot=currentPayload();
+}
+
+async function loadData(){
+  setSyncStatus('Loading…','syncing');
+  try{
+    const j = await apiGet();
+    if(!j.ok) throw new Error('bad');
+    adoptServerData(j);
+    dirty=false; dataLoaded=true;
+    setSyncStatus('','');
+    render(); updateSavedBanner(); startPolling();
+  }catch(e){
+    if(e && e.auth){ showLogin(); return; }
+    setSyncStatus('Reconnecting…','error');
+    setTimeout(loadData, 3000);
+  }
+}
+
+// Background refresh. Keeps running while someone is editing: their open draft is
+// separate from the lists, so other people's changes flow in underneath it and the
+// draft is checked against the latest copy of that row when they hit Save.
+// (Paused while a cell is being edited in place, so the input isn't yanked away mid-typing.)
+function startPolling(){
+  clearInterval(pollTimer);
+  pollTimer = setInterval(async ()=>{
+    if(saveInFlight || dirty || inline) return;   // unsaved changes go through save/merge instead
+    try{
+      const j = await apiGet();
+      if(j.ok && j.rev > baseRev){
+        // keep an unsaved brand-new row (it only exists in this browser)
+        let pendingNew=null;
+        if(newRowId){ const loc=locateRow(newRowId); if(loc) pendingNew=loc.arr[loc.idx]; }
+        adoptServerData(j);
+        if(pendingNew) ACTIVE.unshift(pendingNew);
+        render();
+      }
+    }catch(_){}
+  }, 15000);
+}
+
+async function pushSave(){
+  if(!dataLoaded) return;
+  if(saveInFlight){ clearTimeout(saveTimer); saveTimer=setTimeout(pushSave,600); return; }
+  clearTimeout(retryTimer);
+  saveInFlight = true; setSyncStatus('Saving…','syncing');
+  const sent = currentPayload();
+  try{
+    const res = await fetch('/api/save', { method:'POST', headers:{'Content-Type':'application/json','x-app-password':APP_PASSWORD}, body: JSON.stringify({ baseRev, data: sent }) });
+    if(res.status === 401){ saveInFlight=false; showLogin(); return; }
+    const j = await res.json();
+    if(j.ok){
+      baseRev=j.rev; baseSnapshot=sent; saveInFlight=false; forceReplace=false; mergeAttempts=0;
+      // anything edited while the save was in flight still needs saving
+      dirty = JSON.stringify(currentPayload()) !== JSON.stringify(sent);
+      if(dirty){ clearTimeout(saveTimer); saveTimer=setTimeout(pushSave,300); }
+      else { setSyncStatus('Saved',''); setTimeout(()=>{ if(!dirty) setSyncStatus('',''); },1200); }
+      updateSavedBanner();
+    } else if(j.conflict){
+      saveInFlight=false; handleConflict(j);
+    } else { throw new Error('save rejected'); }
+  }catch(e){
+    saveInFlight=false;
+    setSyncStatus('⚠ Not saved — retrying','error'); updateSavedBanner();
+    clearTimeout(retryTimer); retryTimer=setTimeout(pushSave, 4000);
+  }
+}
+
+// Someone else saved since we loaded. Merge our changes onto their copy and re-save.
+function handleConflict(j){
+  if(forceReplace){ baseRev=j.rev; pushSave(); return; }   // Import: deliberate full replace
+  mergeAttempts++;
+  if(mergeAttempts>6 || !baseSnapshot){
+    // Something keeps changing under us — fall back to the blunt question.
+    const keepMine = confirm("The plan keeps changing on the server while you're saving.\n\nOK = keep MY version (overwrite theirs)\nCancel = discard my unsaved changes and load THEIR latest");
+    if(keepMine){ baseRev=j.rev; pushSave(); }
+    else { adoptServerData(j); dirty=false; render(); updateSavedBanner(); }
+    mergeAttempts=0; return;
+  }
+  const mine=currentPayload();
+  // don't let an unsaved brand-new row get merged/saved
+  let pendingNew=null;
+  if(newRowId){ const loc=locateRow(newRowId); if(loc){ pendingNew=loc.arr[loc.idx]; for(const l of LISTS){ const i=findById(mine[l],newRowId); if(i>-1) mine[l].splice(i,1); } } }
+  let {merged, collisions} = mergePlans(baseSnapshot, mine, j.data);
+  // If I'm mid-edit on a row someone else changed, leave the decision to Save (editBase check)
+  collisions = collisions.filter(c=>{
+    if(editingKey && c.id===editingKey){ return false; }
+    return true;
+  });
+  for(const c of collisions){
+    const name=(c.mine&&c.mine.row.name)||(c.theirs&&c.theirs.row.name)||'an initiative';
+    const msg = `You and someone else both changed "${name}" since you last loaded.\n\n`+
+      `THEIRS: ${describeRow(c.theirs)}\nMINE:   ${describeRow(c.mine)}\n`+
+      (c.mine&&c.theirs?`\nDifferences (theirs → mine):\n${diffFields(c.theirs,c.mine)}\n`:'')+
+      `\nOK = keep MY version of this initiative\nCancel = keep THEIRS\n\n(Everything else has already been merged automatically.)`;
+    const keepMine = confirm(msg);
+    merged = applyCollisionChoice(merged, c, keepMine);
+  }
+  setLists(merged);
+  if(pendingNew) ACTIVE.unshift(pendingNew);
+  baseRev=j.rev; baseSnapshot=clone(j.data);
+  dirty=true; render(); updateSavedBanner();
+  setSyncStatus('Merged — saving…','syncing');
+  pushSave();
+}
+
+function updateSavedBanner(){
+  const el=document.getElementById('save-banner'); if(el) el.style.display = dirty ? 'flex' : 'none';
+}
+
+// ── LOGIN ────────────────────────────────────
+function showLogin(){
+  const o=document.getElementById('login-overlay'); if(o) o.style.display='flex';
+  const i=document.getElementById('login-pass'); if(i){ i.value=''; setTimeout(()=>i.focus(),50); }
+}
+async function doLogin(){
+  const p=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-err'); if(err) err.style.display='none';
+  try{
+    const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:p})});
+    const j=await res.json();
+    if(j.ok){ APP_PASSWORD=p; try{sessionStorage.setItem('s6_pw',p);}catch(_){}
+      document.getElementById('login-overlay').style.display='none'; loadData();
+    } else { if(err) err.style.display='block'; }
+  }catch(e){ if(err) err.style.display='block'; }
+}
+function logout(){ try{sessionStorage.removeItem('s6_pw');}catch(_){}; APP_PASSWORD=''; location.reload(); }
+
+// ── BACKUPS ──────────────────────────────────
+function downloadBackup(){
+  const blob=new Blob([JSON.stringify(currentPayload(),null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='planning-hub-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setSyncStatus('Backup downloaded',''); setTimeout(()=>{ if(!dirty) setSyncStatus('',''); },1600);
+}
+function importBackup(e){
+  const f=e.target.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    let d; try{ d=JSON.parse(rd.result); }catch(_){ alert("That file isn't valid JSON."); e.target.value=''; return; }
+    if(!d || !('active' in d)){ alert("That file doesn't look like a Planning Hub backup."); e.target.value=''; return; }
+    if(!confirm('Replace the current list with this backup and save it to the server for everyone?')){ e.target.value=''; return; }
+    setLists(d);
+    forceReplace=true; dirty=true; render(); updateSavedBanner(); pushSave();
+    e.target.value='';
+  };
+  rd.readAsText(f);
+}
+
+window.addEventListener('beforeunload', (e)=>{ if(dirty){ e.preventDefault(); e.returnValue=''; } });
+
+function saveToSheet(){          // entry point kept; saves to the Replit server
+  if(!dataLoaded) return;
+  dirty=true; updateSavedBanner();
+  try{ localStorage.setItem('s6_hub_fallback', JSON.stringify(currentPayload())); }catch(_){}  // local safety copy
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(pushSave, 500);
+}
+
+
+function setSyncStatus(msg, cls) {
+  const el = document.getElementById('sync-status');
+  if (el) { el.textContent = msg; el.className = 'sync-status ' + (cls||''); }
+}
+
+// ── HELPERS ──────────────────────────────────
+
+function badge(cls,label){ return `<span class="badge ${cls}">${label}</span>`; }
+function objBadge(o){ return `<span class="oc ${OBJ_CLS[o]||'oc-other'}">${OBJ_SHORT[o]||o}</span>`; }
+function esc(s){ return (s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// ── INLINE (IN-TABLE) EDITING ─────────────────
+// Click any value in the table to edit it right there. Enter / clicking away saves,
+// Escape cancels. Saves go through the same merge-safe path as the edit form.
+let inline = null;   // {id, field} of the cell currently being edited, or null
+const INLINE_FIELDS = {
+  name:{type:'text'}, obj:{type:'select',opts:OBJECTIVES}, owner:{type:'select',opts:OWNERS},
+  rank:{type:'text',placeholder:'#'}, startDate:{type:'text',placeholder:'e.g. Oct 7, 2026'},
+  targetDate:{type:'text',placeholder:'e.g. Oct 31, 2026'}, notes:{type:'textarea'},
+  doneDate:{type:'text',placeholder:'e.g. Oct 7, 2026'}
+};
+function isInline(id,field){ return !!inline && inline.id===id && inline.field===field; }
+function startInline(id,field,e){
+  if(e) e.stopPropagation();
+  if(editingKey) return;                       // the full edit form is open — use that
+  if(inline && !isInline(id,field)) commitInlineFromDom();   // finish the previous cell first
+  inline={id,field};
+  render();
+  requestAnimationFrame(()=>{
+    const el=document.querySelector('#table-container .inline-wrap .edit-field');
+    if(el){ el.focus(); if(el.select && el.tagName!=='SELECT') el.select(); }
+  });
+}
+function inlineEditor(id,field,val){
+  const def=INLINE_FIELDS[field]||{type:'text'};
+  let inner='';
+  if(def.type==='select'){
+    inner=`<select class="edit-field" onchange="commitInline(this)" onblur="commitInline(this)" onkeydown="inlineKey(event)">`+def.opts.map(o=>`<option${val===o?' selected':''}>${escHtml(o)}</option>`).join('')+`</select>`;
+  } else if(def.type==='textarea'){
+    inner=`<textarea class="edit-field" onblur="commitInline(this)" onkeydown="inlineKey(event)" placeholder="Latest update…">${escHtml(val)}</textarea><div class="inline-hint">Enter saves · Shift+Enter for a new line · Esc cancels</div>`;
+  } else {
+    inner=`<input class="edit-field" value="${escAttr(val)}" placeholder="${escAttr(def.placeholder||'')}" onblur="commitInline(this)" onkeydown="inlineKey(event)">`;
+  }
+  return `<div class="inline-wrap" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()">${inner}</div>`;
+}
+function inlineKey(e){
+  if(e.key==='Escape'){ e.preventDefault(); inline=null; render(); return; }
+  if(e.key==='Enter' && !(e.target.tagName==='TEXTAREA' && e.shiftKey)){ e.preventDefault(); commitInline(e.target); }
+}
+function commitInlineFromDom(){ const el=document.querySelector('#table-container .inline-wrap .edit-field'); if(el) commitInline(el); }
+function commitInline(el){
+  if(!inline) return;                           // already committed / cancelled
+  const {id,field}=inline; inline=null;
+  const loc=locateRow(id);
+  if(!loc){ render(); return; }
+  const row=loc.arr[loc.idx];
+  let val=(el.value??'');
+  if(field!=='notes') val=val.trim();
+  if(field==='rank') val=val.replace(/[^0-9.\-]/g,'');
+  if(String(row[field]??'')!==val){ row[field]=val; saveToSheet(); }
+  render();
+}
+// Editable cell: shows the value, or the editor when this cell is active.
+function cell(item,field,display,extraClass){
+  const id=item._id;
+  if(isInline(id,field)) return `<td class="cell-edit${extraClass?' '+extraClass:''}">${inlineEditor(id,field,item[field]||'')}</td>`;
+  return `<td class="cell-edit${extraClass?' '+extraClass:''}" onmousedown="startInline('${id}','${field}',event)" title="Click to edit"><span class="cv">${display}</span></td>`;
+}
+function dateDisplay(v){ return v?`<span class="done-date">${formatDate(v)}</span>`:`<span class="done-date date-empty">—</span>`; }
+function rankDisplay(v){ return v!==''&&v!=null?`<span class="rank-val">${escHtml(v)}</span>`:`<span class="date-empty">—</span>`; }
+
+// ── UPDATE COLUMN (latest notes) ─────────────
+// Shows the first few words of "Latest notes" in the row; hovering reveals the full
+// text in a popover. Clicking the cell edits the notes in place.
+const UPD_WORDS = 6;
+function updSnippet(txt){
+  const t=String(txt||'').replace(/\s+/g,' ').trim();
+  if(!t) return '';
+  const w=t.split(' ');
+  return w.length>UPD_WORDS ? w.slice(0,UPD_WORDS).join(' ')+'…' : t;
+}
+function updCell(item){
+  const id=item._id, notes=(item.notes||'').trim();
+  if(isInline(id,'notes')) return `<td class="cell-edit upd-cell">${inlineEditor(id,'notes',item.notes||'')}</td>`;
+  if(!notes) return `<td class="cell-edit upd-cell" onmousedown="startInline('${id}','notes',event)" title="Click to add an update"><span class="cv"><span class="upd-none">No update</span></span></td>`;
+  return `<td class="cell-edit upd-cell" onmousedown="startInline('${id}','notes',event)" title="Click to edit">`
+    +`<span class="cv" style="display:block"><span class="upd-snip">${escHtml(updSnippet(notes))}</span></span>`
+    +`<div class="upd-pop"><div class="upd-pop-label">Latest update · ${escHtml(item.name||'')}</div>${escHtml(notes)}</div>`
+    +`</td>`;
+}
+
+// ── TAB / FILTER / SORT ───────────────────────
+
+function setTab(tab, el) {
+  // Leaving a tab abandons any unsaved brand-new row.
+  discardUnsavedNew();
+  currentView='list';
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  expanded.clear(); editingKey=null; editBase=null; inline=null;
+  colFilters=emptyFilters();
+  [sortCol,sortDir]=defaultSort(tab);
+  render();
+}
+
+// Click a column header: first click sorts A→Z (ascending), second click Z→A.
+function sortBy(col){ if(sortCol===col){ sortDir=-sortDir; } else { sortCol=col; sortDir=1; } render(); }
+function setFilter(col,val){ colFilters[col]=val; openDropdown=null; render(); }
+function toggleDropdown(id,e){ e.stopPropagation(); openDropdown=openDropdown===id?null:id; renderFilterBar(); }
+function closeDropdowns(){ if(openDropdown){openDropdown=null;renderFilterBar();} }
+function clearAllFilters(){ colFilters=emptyFilters(); render(); }
+
+function getArr(){ return listArr(currentTab); }
+
+function filtered(){
+  const q = (document.getElementById('search')||{}).value?.toLowerCase()||'';
+  let items = [...getArr()];
+  if(q) items = items.filter(r=>(r.name||'').toLowerCase().includes(q)||(r.owner||'').toLowerCase().includes(q)||(r.obj||'').toLowerCase().includes(q)||(r.people||'').toLowerCase().includes(q)||(r.desc||'').toLowerCase().includes(q)||(r.notes||'').toLowerCase().includes(q)||(r.lead||'').toLowerCase().includes(q));
+  if(colFilters.obj) items = items.filter(r=>r.obj===colFilters.obj);
+  if(colFilters.owner) items = items.filter(r=>r.owner===colFilters.owner);
+  if(colFilters.functionalArea) items = items.filter(r=>r.functionalArea===colFilters.functionalArea);
+  const col=sortCol||'rank', dir=sortDir||1;
+  items.sort((a,b)=>{
+    if(col==='rank'){   // numeric; blanks always sink to the bottom
+      const pa=parseFloat(a.rank),pb=parseFloat(b.rank);
+      const na=isNaN(pa), nb=isNaN(pb);
+      if(na&&nb) return 0; if(na) return 1; if(nb) return -1;
+      return (pa-pb)*dir;
+    }
+    if(col==='startDate'||col==='targetDate'||col==='doneDate'||col==='removedDate'){   // blanks sink to the bottom
+      const da=new Date(a[col]||''), db=new Date(b[col]||'');
+      const na=isNaN(da.getTime()), nb=isNaN(db.getTime());
+      if(na&&nb) return 0; if(na) return 1; if(nb) return -1;
+      return (da-db)*dir;
+    }
+    if(col==='notes'){ // rows with an update first (or last), then alphabetical
+      const ha=(a.notes||'').trim()?0:1, hb=(b.notes||'').trim()?0:1;
+      if(ha!==hb) return (ha-hb)*dir;
+      return (a.notes||'').localeCompare(b.notes||'')*dir;
+    }
+    return (a[col]||'').localeCompare(b[col]||'',undefined,{sensitivity:'base'})*dir;
+  });
+  // A brand-new, unsaved row always pins to the very top regardless of sort,
+  // so "Add initiative" puts its fields at the top of the list, not buried below.
+  if(newRowId){
+    const i = items.findIndex(r=>r._id===newRowId);
+    if(i>0){ const [row]=items.splice(i,1); items.unshift(row); }
+  }
+  return items;
+}
+
+// ── EDIT / SAVE / REMOVE / MOVE ───────────────
+
+function startEdit(id,e){
+  if(e)e.stopPropagation();
+  inline=null;
+  editingKey=id;
+  const loc=locateRow(id); const item=loc?loc.arr[loc.idx]:getArr().find(r=>r._id===id);
+  editDraft={...item};
+  editDraft._list = loc ? loc.list : currentTab;   // status = which list it lives in (not saved as a row field)
+  editBase = (id===newRowId) ? null : clone(item);   // what the row looked like when editing began
+  render();
+}
+function cancelEdit(){ discardUnsavedNew(); editingKey=null; editDraft={}; editBase=null; render(); }
+function updateDraft(field,val){ editDraft[field]=val; }
+
+// If there's a brand-new row that was never saved, remove it from ACTIVE entirely
+// (it was never persisted, so nothing to clean up on the server).
+function discardUnsavedNew(){
+  if(newRowId){
+    const i = findById(ACTIVE, newRowId);
+    if(i>-1) ACTIVE.splice(i,1);
+    newRowId = null;
+  }
+}
+
+function removeItem(id,e){
+  if(e)e.stopPropagation();
+  // If this is the unsaved new row, just discard it (never persisted).
+  if(id===newRowId){ discardUnsavedNew(); editingKey=null; editDraft={}; editBase=null; render(); return; }
+  const loc=locateRow(id);
+  if(loc){ REMOVED.unshift({...loc.arr[loc.idx],removedFrom:loc.list,removedDate:TODAY}); loc.arr.splice(loc.idx,1); }
+  editingKey=null; editDraft={}; editBase=null; inline=null;
+  saveToSheet(); render();
+}
+
+function restoreItem(id,e){
+  if(e)e.stopPropagation();
+  const idx=findById(REMOVED,id);
+  if(idx>-1){
+    const item={...REMOVED[idx]}; const dest=item.removedFrom||'active';
+    REMOVED.splice(idx,1);
+    if(dest==='done')DONE.unshift(item); else if(dest==='backlog')BACKLOG.unshift(item); else ACTIVE.unshift(item);
+  }
+  expanded.delete(id); saveToSheet(); render();
+}
+
+// Status = which list the initiative is in (Active / Backlog / Done). Moving changes it.
+function moveItem(id,dest,e){
+  if(e)e.stopPropagation();
+  if(dest==='removed'){ removeItem(id); return; }
+  const loc=locateRow(id); if(!loc) return;
+  if(loc.list===dest) return;
+  const item={...loc.arr[loc.idx]};
+  loc.arr.splice(loc.idx,1);
+  if(dest==='done'){ if(!item.doneDate) item.doneDate=TODAY; }
+  else if(loc.list==='done'){ item.doneDate=''; }
+  listArr(dest).unshift(item);
+  expanded.delete(id); editingKey=null; editDraft={}; editBase=null; inline=null;
+  saveToSheet(); render();
+}
+
+function saveEdit(e){
+  if(e)e.stopPropagation();
+  const id=editingKey;
+  const dest=editDraft._list||currentTab; delete editDraft._list;
+  // Find the row wherever it is now — a colleague may have moved it while we were editing.
+  let loc=locateRow(id);
+  // Did someone else change this row while the edit form was open?
+  if(editBase && loc){
+    const now=loc.arr[loc.idx];
+    if(!rowsEqual(now,editBase) && !rowsEqual(now,editDraft)){
+      const msg=`Someone else updated "${now.name||editBase.name}" while you were editing it.\n\n`+
+        `Differences (theirs → mine):\n${diffFields({row:now},{row:editDraft})}\n\n`+
+        `OK = save MY version (overwrite theirs)\nCancel = keep THEIRS and discard my edit`;
+      if(!confirm(msg)){ editingKey=null; editDraft={}; editBase=null; newRowId=null; render(); return; }
+    }
+  } else if(editBase && !loc){
+    if(!confirm(`Someone else removed "${editBase.name}" while you were editing it.\n\nOK = put it back with my changes\nCancel = leave it removed`)){ editingKey=null; editDraft={}; editBase=null; render(); return; }
+  }
+  const fromList = loc ? loc.list : 'active';
+  if(dest!==fromList || !loc){
+    if(loc) loc.arr.splice(loc.idx,1);
+    if(dest==='done'){ if(!editDraft.doneDate) editDraft.doneDate=TODAY; }
+    else if(fromList==='done'){ editDraft.doneDate=''; }
+    listArr(dest).unshift({...editDraft});
+  } else {
+    loc.arr[loc.idx]={...editDraft};
+  }
+  // The row is now a real, saved row — clear the "unsaved new" flag so it persists.
+  newRowId = null;
+  editingKey=null; editDraft={}; editBase=null;
+  saveToSheet(); render();
+}
+
+function addNew(){
+  // Abandon any prior unsaved new row before creating another (prevents pile-up).
+  discardUnsavedNew();
+  inline=null;
+  const id = nextId();
+  const newItem={_id:id,obj:"Conversion Rate",name:"New initiative",owner:"Julie",people:"",lead:"",functionalArea:"",rank:"",startDate:"",targetDate:"",desc:"",notes:"",doneDate:"",removedFrom:"",removedDate:""};
+  ACTIVE.unshift(newItem);
+  newRowId = id;
+  if(currentTab!=='active'){ currentTab='active'; document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); document.getElementById('tab-active').classList.add('active'); }
+  // Clear any active filters/search so the new row can't be hidden.
+  colFilters=emptyFilters();
+  [sortCol,sortDir]=defaultSort('active');
+  const searchEl=document.getElementById('search'); if(searchEl) searchEl.value='';
+  editingKey=id; editDraft={...newItem,_list:'active'}; editBase=null;
+  // NOTE: deliberately NOT calling saveToSheet() here — a brand-new row is not
+  // persisted until the user clicks Save.
+  render();
+  // Scroll the new row (pinned to top) into view, just below the sticky header.
+  requestAnimationFrame(()=>{
+    const newRowEl=document.querySelector('#table-container tbody tr[data-newrow="1"]') || document.querySelector('#table-container tbody tr');
+    if(newRowEl){
+      const siteHeader=document.querySelector('.site-header');
+      const stickyBar=document.querySelector('.sticky-bar');
+      const offset=(siteHeader?siteHeader.offsetHeight:0)+(stickyBar?stickyBar.offsetHeight:0)+12;
+      const top=newRowEl.getBoundingClientRect().top+window.pageYOffset-offset;
+      window.scrollTo({top:top<0?0:top,behavior:'smooth'});
+    }
+  });
+}
+
+function selField(field,opts,val,labels){
+  let s=`<select class="edit-field" onchange="updateDraft('${field}',this.value)">`;
+  opts.forEach(o=>s+=`<option value="${escAttr(o)}"${val===o?' selected':''}>${escHtml(labels?labels[o]:o)}</option>`);
+  return s+'</select>';
+}
+
+function toggleRow(id,e){ if(e) e.stopPropagation(); if(editingKey===id)return; if(expanded.has(id))expanded.delete(id); else expanded.add(id); render(); }
+
+// ── STICKY OFFSET ────────────────────────────────
+function updateStickyOffset() {
+  const siteHeader = document.querySelector('.site-header');
+  const stickyBar = document.querySelector('.sticky-bar');
+  if (!siteHeader || !stickyBar) return;
+  const offset = siteHeader.offsetHeight + stickyBar.offsetHeight;
+  document.querySelectorAll('.tbl th').forEach(th => {
+    th.style.top = offset + 'px';
+  });
+}
+
+// ── RENDER ────────────────────────────────────
+
+function renderFilterBar(){
+  const filters=[
+    {id:'dd-obj',col:'obj',label:'Objective',opts:OBJECTIVES},
+    {id:'dd-owner',col:'owner',label:'Sponsor',opts:OWNERS},
+    {id:'dd-fa',col:'functionalArea',label:'Functional Area',opts:FUNC_AREAS},
+  ];
+  const activeCount=Object.values(colFilters).filter(v=>v).length;
+  let html='';
+  filters.forEach(f=>{
+    const val=colFilters[f.col],isOpen=openDropdown===f.id,isActive=!!val;
+    html+=`<div style="position:relative"><button class="filter-pill${isActive?' active-filter':''}" onclick="toggleDropdown('${f.id}',event)">${val||f.label}<i class="ti ti-chevron-down" style="font-size:11px;margin-left:3px;opacity:.6"></i>`;
+    if(isActive) html+=` <i class="ti ti-x" style="font-size:11px;opacity:.7" onclick="event.stopPropagation();setFilter('${f.col}','')"></i>`;
+    html+=`</button>`;
+    if(isOpen){
+      html+=`<div class="dropdown-menu" onclick="event.stopPropagation()"><div class="dropdown-item${val===''?' selected':''}" onclick="setFilter('${f.col}','')">All ${f.label.toLowerCase()}s</div>`;
+      f.opts.forEach(o=>html+=`<div class="dropdown-item${val===o?' selected':''}" onclick="setFilter('${f.col}','${esc(o)}')">${o}</div>`);
+      html+=`</div>`;
+    }
+    html+=`</div>`;
+  });
+  if(activeCount>0) html+=`<button class="filter-pill" onclick="clearAllFilters()">Clear all</button>`;
+  html+=`<span class="filter-hint">Click a column header to sort · click any value to edit it · Priority: 1 is highest, ties are fine</span>`;
+  document.getElementById('filter-bar').innerHTML=html;
+}
+
+function render(){
+  document.getElementById('cnt-active').textContent=ACTIVE.length;
+  document.getElementById('cnt-done').textContent=DONE.length;
+  document.getElementById('cnt-backlog').textContent=BACKLOG.length;
+  document.getElementById('cnt-removed').textContent=REMOVED.length;
+  if(currentView==='calendar'){ renderCalendarView(); return; }
+  renderFilterBar();
+  const items=filtered();
+  const rc=document.getElementById('result-count');
+  if(rc) rc.textContent=items.length+' shown';
+  const isDone=currentTab==='done', isRemoved=currentTab==='removed';
+
+  let html=`<table class="tbl"><thead><tr>`;
+  const th=(col,label,w,noSort)=>{
+    if(noSort) return `<th class="no-sort" style="width:${w}">${label}</th>`;
+    const on=sortCol===col;
+    const arrow=on?(sortDir>0?'↑':'↓'):'↕';
+    const tip=on?(sortDir>0?'Sorted A→Z — click for Z→A':'Sorted Z→A — click for A→Z'):'Click to sort';
+    return `<th class="${on?'sorted':''}" style="width:${w}" title="${tip}" onclick="sortBy('${col}')">${label} <span class="sort-arrow">${arrow}</span></th>`;
+  };
+  if(isRemoved){
+    html+=th('name','Initiative','36%')+th('obj','Objective','12%')+th('owner','Sponsor','10%')+th('rank','Priority','9%')+th('removedDate','Removed','14%')+th('','',null,true);
+  } else if(isDone){
+    html+=th('name','Initiative','36%')+th('obj','Objective','12%')+th('owner','Sponsor','10%')+th('rank','Priority','9%')+th('doneDate','Completed','14%')+th('','',null,true);
+  } else {
+    html+=th('name','Initiative','27%')+th('obj','Objective','10%')+th('owner','Sponsor','9%')+th('rank','Priority','8%')+th('startDate','Start','10%')+th('targetDate','Target','10%')+th('notes','Update','25%')+th('','','2%',true);
+  }
+  html+=`</tr></thead><tbody>`;
+
+  if(!items.length){
+    html+=`<tr><td colspan="9"><div class="empty">${isRemoved?'No removed initiatives.':'No initiatives match the current filters.'}</div></td></tr>`;
+  } else {
+    items.forEach(item=>{
+      const id=item._id, isExp=expanded.has(id), isEd=editingKey===id, rowOpen=isExp||isEd;
+      const isNewRow = id===newRowId;
+      html+=`<tr class="${rowOpen?'exp-row':''}${isRemoved?' archived-row':''}"${isNewRow?' data-newrow="1"':''} onclick="if(!event.target.closest('select,input,textarea,button,.cell-edit'))toggleRow('${id}')">`;
+      // Initiative name: chevron opens the details; the name itself edits in place.
+      const chev=`<i class="ti ti-chevron-right chevron${rowOpen?' open':''}" title="${rowOpen?'Hide details':'Show details'}" onclick="toggleRow('${id}',event)"></i>`;
+      if(isInline(id,'name')) html+=`<td class="cell-edit"><div class="init-name">${chev}${inlineEditor(id,'name',item.name||'')}</div></td>`;
+      else if(isRemoved) html+=`<td><div class="init-name">${chev}<span>${escHtml(item.name)}</span></div></td>`;
+      else html+=`<td class="cell-edit"><div class="init-name">${chev}<span class="cv" onmousedown="startInline('${id}','name',event)" title="Click to edit">${escHtml(item.name)}</span></div></td>`;
+      if(isRemoved){
+        html+=`<td>${objBadge(item.obj)}</td>`;
+        html+=`<td style="font-size:12px;color:var(--text2)">${escHtml(item.owner)}</td>`;
+        html+=`<td>${rankDisplay(item.rank)}</td>`;
+        html+=`<td>${dateDisplay(item.removedDate)}</td>`;
+      } else {
+        html+=cell(item,'obj',objBadge(item.obj));
+        html+=cell(item,'owner',`<span style="font-size:12px;color:var(--text2)">${escHtml(item.owner)}</span>`);
+        html+=cell(item,'rank',rankDisplay(item.rank));
+        if(isDone){
+          html+=cell(item,'doneDate',dateDisplay(item.doneDate));
+        } else {
+          html+=cell(item,'startDate',dateDisplay(item.startDate));
+          html+=cell(item,'targetDate',dateDisplay(item.targetDate));
+          html+=updCell(item);
+        }
+      }
+      html+=`<td></td></tr>`;
+
+      if(isExp&&!isEd){
+        const here = isRemoved ? 'removed' : currentTab;
+        html+=`<tr class="detail-row"><td colspan="9"><div class="detail-box">`;
+        html+=`<div><div class="dlabel">Priority</div><div class="dtext">${escHtml(item.rank)||'\u2014'}</div></div>`;
+        html+=`<div><div class="dlabel">Status</div><div class="dtext">${LIST_LABEL[here]||here}</div></div>`;
+        html+=`<div><div class="dlabel">Description</div><div class="dtext">${escHtml(item.desc)||'—'}</div></div>`;
+        html+=`<div><div class="dlabel">Latest notes</div><div class="dtext" style="white-space:pre-wrap">${escHtml(item.notes)||'—'}</div></div>`;
+        html+=`<div><div class="dlabel">Sponsor</div><div class="dtext">${escHtml(item.owner)||'—'}</div></div>`;
+        html+=`<div><div class="dlabel">Lead</div><div class="dtext">${escHtml(item.lead)||'—'}</div></div>`;
+        html+=`<div><div class="dlabel">Functional area</div><div class="dtext">${escHtml(item.functionalArea)||'—'}</div></div>`;
+        html+=`<div><div class="dlabel">People</div><div class="dtext">${escHtml(item.people)||'—'}</div></div>`;
+        html+=`<div><div class="dlabel">Start date</div><div class="dtext">${item.startDate?formatDate(item.startDate):'—'}</div></div>`;
+        html+=`<div><div class="dlabel">Target date</div><div class="dtext">${item.targetDate?formatDate(item.targetDate):'—'}</div></div>`;
+        if(isDone) html+=`<div><div class="dlabel">Completed</div><div class="dtext">${formatDate(item.doneDate)}</div></div>`;
+        if(isRemoved) html+=`<div><div class="dlabel">Removed</div><div class="dtext">${formatDate(item.removedDate)} · was in ${item.removedFrom||'active'}</div></div>`;
+        html+=`<div class="detail-full" style="margin-top:4px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">`;
+        if(!isRemoved){
+          html+=`<button class="btn-edit" onclick="startEdit('${id}',event)"><i class="ti ti-edit" style="font-size:12px;margin-right:3px"></i>Edit all fields</button>`;
+          html+=`<span class="move-bar"><span class="move-label">Set status</span>`;
+          ['active','backlog','done'].filter(l=>l!==here).forEach(l=>{ html+=`<button class="btn-edit" onclick="moveItem('${id}','${l}',event)">${LIST_LABEL[l]}</button>`; });
+          html+=`<button class="btn-edit" style="color:var(--danger-text);border-color:var(--danger-border)" onclick="removeItem('${id}',event)"><i class="ti ti-trash" style="font-size:12px;margin-right:3px"></i>Remove</button></span>`;
+        }
+        if(isRemoved) html+=`<button class="btn-restore" onclick="restoreItem('${id}',event)"><i class="ti ti-arrow-back-up" style="font-size:12px;margin-right:3px"></i>Restore</button>`;
+        html+=`</div></div></td></tr>`;
+      }
+
+      if(isEd){
+        html+=`<tr class="detail-row"><td colspan="9"><div class="detail-box" onclick="event.stopPropagation()">`;
+        html+=`<div><div class="dlabel">Priority (number — 1 is highest; ties are fine)</div><input class="edit-field" value="${escAttr(editDraft.rank||'')}" oninput="updateDraft('rank',this.value)" placeholder="#"></div>`;
+        html+=`<div><div class="dlabel">Initiative name</div><input class="edit-field" value="${escAttr(editDraft.name||'')}" oninput="updateDraft('name',this.value)"></div>`;
+        html+=`<div><div class="dlabel">Objective</div>${selField('obj',OBJECTIVES,editDraft.obj)}</div>`;
+        html+=`<div><div class="dlabel">Sponsor</div>${selField('owner',OWNERS,editDraft.owner)}</div>`;
+        html+=`<div><div class="dlabel">Lead</div>${leadCombo(editDraft.lead)}</div>`;
+        html+=`<div><div class="dlabel">Functional area</div>${selField('functionalArea',['',...FUNC_AREAS],editDraft.functionalArea)}</div>`;
+        html+=`<div><div class="dlabel">Status</div>${selField('_list',['active','backlog','done'],editDraft._list||'active',LIST_LABEL)}</div>`;
+        html+=`<div><div class="dlabel">Start date</div><input class="edit-field" value="${escAttr(editDraft.startDate||'')}" oninput="updateDraft('startDate',this.value)" placeholder="e.g. Jul 1, 2026"></div>`;
+        html+=`<div><div class="dlabel">Target completion date</div><input class="edit-field" value="${escAttr(editDraft.targetDate||'')}" oninput="updateDraft('targetDate',this.value)" placeholder="e.g. Jul 31, 2026"></div>`;
+        html+=`<div><div class="dlabel">People involved</div><input class="edit-field" value="${escAttr(editDraft.people||'')}" oninput="updateDraft('people',this.value)"></div>`;
+        html+=`<div><div class="dlabel">Completed date</div><input class="edit-field" value="${escAttr(editDraft.doneDate||'')}" oninput="updateDraft('doneDate',this.value)" placeholder="Set automatically when moved to Done"></div>`;
+        html+=`<div class="detail-full"><div class="dlabel">Description</div><textarea class="edit-field" oninput="updateDraft('desc',this.value)">${escHtml(editDraft.desc||'')}</textarea></div>`;
+        html+=`<div class="detail-full"><div class="dlabel">Latest notes</div><textarea class="edit-field" oninput="updateDraft('notes',this.value)">${escHtml(editDraft.notes||'')}</textarea></div>`;
+        html+=`<div class="detail-full save-bar"><button class="btn-save" onclick="saveEdit(event)"><i class="ti ti-check" style="font-size:12px;margin-right:3px"></i>Save</button><button class="btn-cancel" onclick="cancelEdit()">Cancel</button><button class="btn-remove" onclick="removeItem('${id}',event)"><i class="ti ti-trash" style="font-size:12px;margin-right:3px"></i>Remove</button></div>`;
+        html+=`</div></td></tr>`;
+      }
+    });
+  }
+  html+=`</tbody></table>`;
+  document.getElementById('table-container').innerHTML=html;
+  requestAnimationFrame(updateStickyOffset);
+}
+
+/* ── Roadmap Calendar (Gantt) ─────────────────────── */
+const OBJ_COLOR = {"B2B":"teal","Wall Art":"purple","Conversion Rate":"green","Traffic":"blue","Trade Revenue":"coral","Return Rate":"amber","Operating Efficiency":"olive","New Channels":"pink","Retention":"red","Other":"gray"};
+const DAYMS = 86400000;
+function parseD(s){ if(!s) return null; const d=new Date(s); return isNaN(d.getTime())?null:d; }
+function startOfWeek(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); x.setHours(0,0,0,0); return x; }
+function calEnd(it,s){ let e=parseD(it.targetDate); if(!e||e<s) e=new Date(s.getTime()+14*DAYMS); return e; }
+function openCalendar(el){ discardUnsavedNew(); currentView='calendar'; document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); if(el) el.classList.add('active'); expanded.clear(); editingKey=null; editBase=null; inline=null; render(); }
+function renderCalendarView(){
+  const items=[...ACTIVE,...BACKLOG].filter(x=>parseD(x.startDate));
+  const objs=[...new Set(items.map(x=>x.obj))];
+  const legend=objs.map(o=>{const c=OBJ_COLOR[o]||'gray';return `<span class="cal-legend"><span class="cal-swatch" style="background:var(--${c}-text)"></span>${OBJ_SHORT[o]||o}</span>`;}).join('');
+  document.getElementById('filter-bar').innerHTML=`<span class="cal-legend-note">Colored by objective · grouped by functional area</span>${legend}`;
+  const rc=document.getElementById('result-count'); if(rc) rc.textContent=items.length+' scheduled';
+  const cont=document.getElementById('table-container');
+  if(!items.length){ cont.innerHTML=`<div class="cal-empty">No initiatives have a start date yet.<br>Click the <b>Start</b> cell of an initiative to place it on the roadmap.</div>`; return; }
+  let minS=Infinity,maxE=-Infinity;
+  items.forEach(it=>{const s=parseD(it.startDate); const e=calEnd(it,s); minS=Math.min(minS,s.getTime()); maxE=Math.max(maxE,e.getTime());});
+  const rangeStart=startOfWeek(new Date(minS));
+  const rangeEnd=new Date(startOfWeek(new Date(maxE)).getTime()+7*DAYMS);
+  const weeks=[]; for(let t=rangeStart.getTime();t<=rangeEnd.getTime();t+=7*DAYMS) weeks.push(new Date(t));
+  const WW=46, totalW=weeks.length*WW;
+  let monthRow='',i=0;
+  while(i<weeks.length){ const m=weeks[i].getMonth(),y=weeks[i].getFullYear(); let span=0; while(i+span<weeks.length&&weeks[i+span].getMonth()===m&&weeks[i+span].getFullYear()===y) span++; monthRow+=`<div class="cal-month" style="width:${span*WW}px">${weeks[i].toLocaleDateString('en-US',{month:'short',year:'numeric'})}</div>`; i+=span; }
+  const weekRow=weeks.map(w=>`<div class="cal-week" style="width:${WW}px">${w.getDate()}</div>`).join('');
+  const now=Date.now(); const todayLeft=(now>=rangeStart.getTime()&&now<=rangeEnd.getTime())?((now-rangeStart.getTime())/DAYMS/7*WW):null;
+  let body='';
+  [...FUNC_AREAS,''].forEach(fa=>{
+    const g=items.filter(it=>(it.functionalArea||'')===fa); if(!g.length) return;
+    body+=`<div class="cal-group" style="width:${totalW}px"><span class="cal-group-label">${fa||'Unassigned'}</span></div>`;
+    g.forEach(it=>{
+      const s=parseD(it.startDate); const e=calEnd(it,s);
+      const left=(s.getTime()-rangeStart.getTime())/DAYMS/7*WW;
+      let width=(e.getTime()-s.getTime())/DAYMS/7*WW; if(width<WW*1.5) width=WW*1.5;
+      const c=OBJ_COLOR[it.obj]||'gray';
+      body+=`<div class="cal-row" style="width:${totalW}px"><div class="gbar" style="left:${left}px;width:${width}px;background:var(--${c}-bg);color:var(--${c}-text);border-color:var(--${c}-text)" onclick="openInitiative('${it._id}')" title="${esc((OBJ_SHORT[it.obj]||it.obj)+" \u00b7 "+it.name)}"><span style="font-weight:700;opacity:.72;margin-right:5px;flex:none">${esc(OBJ_SHORT[it.obj]||it.obj)}</span><span style="overflow:hidden;text-overflow:ellipsis">${esc(it.name)}</span></div></div>`;
+    });
+  });
+  const today=todayLeft!=null?`<div class="cal-today" style="left:${todayLeft}px"></div>`:'';
+  cont.innerHTML=`<div class="cal-scroll"><div class="cal-inner" style="width:${totalW}px">${today}<div class="cal-headrow cal-months">${monthRow}</div><div class="cal-headrow cal-weeks">${weekRow}</div>${body}</div></div>`;
+}
+function openInitiative(id){
+  const it=[...ACTIVE,...BACKLOG,...DONE,...REMOVED].find(x=>x._id===id); if(!it) return;
+  const loc=locateRow(id);
+  const row=(l,v)=>`<div><div class="dlabel">${l}</div><div class="dtext">${(v!==undefined&&v!==null&&v!=='')?v:'—'}</div></div>`;
+  const html=`<div class="cal-modal" onclick="closeModal()"><div class="cal-modal-box" onclick="event.stopPropagation()">`
+    +`<div class="cal-modal-head"><span class="oc ${OBJ_CLS[it.obj]||'oc-other'}">${OBJ_SHORT[it.obj]||it.obj}</span><span class="cal-modal-title">${esc(it.name)}</span><button class="cal-x" onclick="closeModal()">✕</button></div>`
+    +`<div class="detail-box" style="border-bottom:none">`
+    +row('Priority',it.rank)+row('Status',loc?LIST_LABEL[loc.list]:'')+row('Start date',it.startDate?formatDate(it.startDate):'')+row('Target date',it.targetDate?formatDate(it.targetDate):'')+row('Sponsor',it.owner)+row('Lead',it.lead)+row('Functional area',it.functionalArea)+row('People',it.people)
+    +`<div class="detail-full">${row('Description',it.desc)}</div><div class="detail-full">${row('Latest notes',it.notes)}</div>`
+    +`</div><div class="cal-modal-foot"><button class="btn-save" onclick="editFromCalendar('${id}')"><i class="ti ti-edit" style="font-size:12px;margin-right:3px"></i>Edit</button><button class="btn-cancel" onclick="closeModal()">Close</button></div>`
+    +`</div></div>`;
+  document.getElementById('modal-root').innerHTML=html;
+}
+function closeModal(){ document.getElementById('modal-root').innerHTML=''; }
+function editFromCalendar(id){
+  closeModal();
+  let tab='active'; if(BACKLOG.some(x=>x._id===id)) tab='backlog'; else if(DONE.some(x=>x._id===id)) tab='done'; else if(REMOVED.some(x=>x._id===id)) tab='removed';
+  currentView='list'; currentTab=tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const tb=document.getElementById('tab-'+tab); if(tb) tb.classList.add('active');
+  colFilters=emptyFilters(); [sortCol,sortDir]=defaultSort(tab);
+  startEdit(id);
+}
+
+
+// ── INIT ─────────────────────────────────────
+window.addEventListener('resize', updateStickyOffset);
+
+try{ const sp=sessionStorage.getItem('s6_pw'); if(sp) APP_PASSWORD=sp; }catch(_){}
+if(APP_PASSWORD){ loadData(); } else { showLogin(); }
+</script>
+</body>
+</html>
